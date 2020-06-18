@@ -1,2 +1,5 @@
 bridgingcs_notes.xopp
 venv
+__pycache__
+*.pyc
+*.pyo
