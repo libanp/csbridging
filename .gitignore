@@ -5,3 +5,6 @@ __pycache__
 *.pyo
 *.swp
 geckodriver.log
+Assignment.org
+geckodriver.log
+db.sqlite3
