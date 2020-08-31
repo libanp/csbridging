@@ -13,6 +13,20 @@ class NewVisitorTest(unittest.TestCase):
     def tearDown(self):
         self.browser.quit()
 
+
+    def send_to_inputbox_by_id(self, element_id, text, key=Keys.ENTER):
+        inputbox = self.browser.find_element_by_id(element_id)
+        inputbox.send_keys(text)
+        inputbox.send_keys(key)
+        time.sleep(1)
+
+    def check_for_entry_list_by_id(self, element_id, text):
+        # Doesn't check its in an unordered list
+        entry_list = self.browser.find_element_by_id(element_id)
+        entries = entry_list.find_elements_by_tag_name('li')
+        self.assertNotEqual(entries, [], f"{element_id} produces empty list")
+        self.assertIn(text, [entry.text for entry in entries])
+
     def test_author_story(self):
 
 
@@ -20,7 +34,7 @@ class NewVisitorTest(unittest.TestCase):
         # currently looks like
         self.browser.get('http://localhost:8000/cv')
 
-        with self.subTest(msg='Basic structure'):
+        with self.subTest('Basic structure'):
             # You know you are in the right place because your name and 'CV' is
             # in the title and header
             self.assertIn('CV: Liban Hannan', self.browser.title)
@@ -35,7 +49,7 @@ class NewVisitorTest(unittest.TestCase):
                     sections, ['Contact Details','Education','Key Skills','Employment History']
                     )
 
-        with self.subTest(msg='Add contact detail'):
+        with self.subTest('Add contact details'):
             # You see that your contact details are missing. Noticing the "Add"
             # button you click it and a box to enter text appears. You enter
             # your student email address lxh349@student.bham.ac.uk
@@ -45,29 +59,50 @@ class NewVisitorTest(unittest.TestCase):
             time.sleep(1)
             # TODO: Hiding/popup will need to be done with CSS and/or JS later
 
-            inputbox = self.browser.find_element_by_id('id_contact_add_detail_input')
             email = 'lxh349@student.bham.ac.uk'
-            inputbox.send_keys(email)
-
+            self.send_to_inputbox_by_id('id_contact_add_detail_input', email)
             # When you press enter, the page updates and now your new contact
-            # details are listed in the correct section
-            inputbox.send_keys(Keys.ENTER)
-            time.sleep(1)
+            self.check_for_entry_list_by_id('id_contact_details_list', email)
 
-            contact_details = self.browser.find_element_by_id('id_contact_details_list')
-            details = contact_details.find_elements_by_tag_name('li')
-            self.assertIn(email, [detail.text for detail in details])
+            # You add a second contact detail to the list, your postal address:
+            # Edgbaston, Birmingham, B15 2TT, United Kingdom 
+            address = 'Edgbaston, Birmingham, B15 2TT, United Kingdom'
+            self.send_to_inputbox_by_id('id_contact_add_detail_input', address)
+            self.check_for_entry_list_by_id('id_contact_details_list', address)
 
 
-        # You add a second contact detail to the list, your postal address:
-        # Edgbaston, Birmingham, B15 2TT, United Kingdom 
+
+        with self.subTest('Add education details'):
+            # You enter your A-level results using the available input
+            # TODO: looks refactorable
+            start = '2003'
+            end = '2008'
+            qual = 'A-Levels'
+            inst = 'Hillcrest Secondary School, Kenya'
+            grade = 'AAAB'
+            self.send_to_inputbox_by_id('id_education_start', start, Keys.TAB)
+            self.send_to_inputbox_by_id('id_education_end', end, Keys.TAB)
+            self.send_to_inputbox_by_id('id_education_qual', qual, Keys.TAB)
+            self.send_to_inputbox_by_id('id_education_inst', inst, Keys.TAB)
+            self.send_to_inputbox_by_id('id_education_grade', grade, Keys.ENTER)
+
+            # Check that the entry is in the education section
+            for part in [start, end, qual, inst, grade]:
+                self.check_for_entry_list_by_id('id_education_list', part)
+
         self.fail('Finish the test!')
+        #with self.subTest(msg='Add key skills details'):
+            # You enter your key skills using the available input
+        #    self.send_to_inputbox_by_id('id_skills_input')
 
-        # You notice that your entered your email address incorrectly. You
-        # notice the "Edit" button which you click and a text box with the
-        # entered email appears. You correct the email to
-        # lxh348@student.bham.ac.uk. When you hit enter the page updates with
-        # the correct email address
+        #with self.subTest(msg='Add employment history details'):
+            # You enter your employment history using the available input
+            
+            # You notice that your entered your email address incorrectly. You
+            # notice the "Edit" button which you click and a text box with the
+            # entered email appears. You correct the email to
+            # lxh348@student.bham.ac.uk. When you hit enter the page updates
+            # with the correct email address
 
 
 if __name__ == '__main__':

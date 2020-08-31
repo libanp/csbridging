@@ -5,15 +5,32 @@
     <body>
         <h1>Liban Hannan (CV)</h1>
         <h2>Contact Details</h2>
+            <ul id='id_contact_details_list'>
+                {% for contact in contacts %}
+                <li> {{ contact.text }} </li>
+                {% endfor %}
+            </ul>
+            <br>
             <form method="POST">
                 <input name="contact_detail" id="id_contact_add_detail_input" placeholder="Enter a new contact method" />
                  {% csrf_token %}
             </form>
             <button type="button" id="id_contact_add_detail_button">Add</button>
-            <ul>
-                <li> {{ new_contact_detail }} </li>
-            </ul>
         <h2>Education</h2>
+            <ul id='id_education_list'>
+                {% for education in education_list %}
+                <li> {{ education.text }} </li>
+                {% endfor %}
+            </ul>
+            <form method="POST">
+                <input name="edu_start" id="id_education_start" placeholder="Start Year" />
+                <input name="edu_end" id="id_education_end" placeholder="End Year" />
+                <input name="edu_qual" id="id_education_qual" placeholder="Qualification" />
+                <input name="edu_inst" id="id_education_inst" placeholder="Institution" />
+                <input name="edu_grade" id="id_education_grade" placeholder="Grade" />
+                <input type="submit" id="id_contact_add_detail_button">Add</button>
+                {% csrf_token %}
+            </form>
         <h2>Key Skills</h2>
         <h2>Employment History</h2>
     </body>
