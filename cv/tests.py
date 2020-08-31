@@ -8,3 +8,7 @@ class HomePageTest(TestCase):
         found = resolve('/cv')
         self.assertEquals(found.func, cv_page)
 
+    def test_uses_home_template(self):
+        response = self.client.get('/cv')
+        self.assertTemplateUsed(response, 'cv.html')
+
