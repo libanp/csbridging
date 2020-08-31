@@ -5,6 +5,14 @@
     <body>
         <h1>Liban Hannan (CV)</h1>
         <h2>Contact Details</h2>
+            <form method="POST">
+                <input name="contact_detail" id="id_contact_add_detail_input" placeholder="Enter a new contact method" />
+                 {% csrf_token %}
+            </form>
+            <button type="button" id="id_contact_add_detail_button">Add</button>
+            <ul>
+                <li> {{ new_contact_detail }} </li>
+            </ul>
         <h2>Education</h2>
         <h2>Key Skills</h2>
         <h2>Employment History</h2>

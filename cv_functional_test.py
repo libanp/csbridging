@@ -40,18 +40,18 @@ class NewVisitorTest(unittest.TestCase):
             # button you click it and a box to enter text appears. You enter
             # your student email address lxh349@student.bham.ac.uk
             button = self.browser.find_element_by_id('id_contact_add_detail_button')
-            self.assertEqual(button.get_attribute('value'), 'Add')
+            self.assertEqual(button.text, 'Add')
             button.click()
             time.sleep(1)
+            # TODO: Hiding/popup will need to be done with CSS and/or JS later
 
             inputbox = self.browser.find_element_by_id('id_contact_add_detail_input')
             email = 'lxh349@student.bham.ac.uk'
             inputbox.send_keys(email)
-            
 
             # When you press enter, the page updates and now your new contact
             # details are listed in the correct section
-            inputbox.send_keys(Keys.Enter)
+            inputbox.send_keys(Keys.ENTER)
             time.sleep(1)
 
             contact_details = self.browser.find_element_by_id('id_contact_details_list')
